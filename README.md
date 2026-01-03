@@ -1,6 +1,6 @@
 # 九九練習アプリ
 
-TypeScript で実装した九九の練習用シングルページアプリです。
+ブラウザだけで動く JavaScript 実装の九九練習用シングルページアプリです。
 
 ## 主な機能
 - ランダムな 1〜9 の掛け算問題を出題
@@ -17,12 +17,10 @@ npm --version
 ```
 
 ## 主なスクリプト
-- `npm run build`: TypeScript のビルド (出力は `dist/main.js`)
-- `npm run clean`: ビルド成果物の削除
 - `npm start`: 簡易サーバーでアプリを http://localhost:8000 から提供
 
 ## ローカル起動手順
-ビルド済みの `dist/main.js` を利用してすぐに動作確認できます。
+ビルド不要の純粋な JavaScript 版なので、そのまま動作確認できます。
 
 ```bash
 npm start                 # デフォルトで 8000 番ポートを使用

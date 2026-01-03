@@ -2,11 +2,6 @@
   "name": "multiplication-quiz",
   "version": "1.0.0",
   "scripts": {
-    "start": "node server.js",
-    "build": "tsc",
-    "clean": "rm -rf dist"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3"
+    "start": "node server.js"
   }
 }
