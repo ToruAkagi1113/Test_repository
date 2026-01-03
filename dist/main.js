@@ -5,6 +5,7 @@ const answerInput = getRequiredElement('answer-input');
 const feedback = getRequiredElement('feedback');
 const checkButton = getRequiredElement('check-answer');
 const nextButton = getRequiredElement('next-question');
+const resetStatsButton = getRequiredElement('reset-stats');
 const correctCountLabel = getRequiredElement('correct-count');
 const attemptCountLabel = getRequiredElement('attempt-count');
 const accuracyLabel = getRequiredElement('accuracy');
@@ -58,6 +59,15 @@ function setFeedback(message, status) {
   feedback.textContent = message;
   feedback.dataset.status = status;
 }
+function resetStats() {
+  correctCount = 0;
+  attemptCount = 0;
+  streak = 0;
+  bestStreak = 0;
+  updateStats();
+  setFeedback('成績をリセットしました。新しい問題に挑戦しましょう。', 'info');
+  resetForNextQuestion({ preserveFeedback: true });
+}
 function resetForNextQuestion(options) {
   const { preserveFeedback = false } = options ?? {};
   currentQuestion = createQuestion(currentQuestion);
@@ -100,6 +110,9 @@ checkButton.addEventListener('click', () => {
 });
 nextButton.addEventListener('click', () => {
   resetForNextQuestion();
+});
+resetStatsButton.addEventListener('click', () => {
+  resetStats();
 });
 answerInput.addEventListener('keyup', (event) => {
   if (event.key === 'Enter') {

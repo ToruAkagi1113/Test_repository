@@ -126,6 +126,7 @@
         display: flex;
         gap: 12px;
         align-items: center;
+        flex-wrap: wrap;
       }
 
       .badge {
@@ -154,6 +155,18 @@
         clip: rect(0, 0, 0, 0);
         white-space: nowrap;
         border: 0;
+      }
+
+      .actions {
+        margin-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .reset-button {
+        background: #f59e0b;
+        color: #fff;
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
       }
     </style>
   </head>
@@ -204,6 +217,10 @@
           <span class="label">ベスト</span>
           <span id="best-streak">0問</span>
         </span>
+      </div>
+
+      <div class="actions">
+        <button class="reset-button" id="reset-stats" type="button">成績をリセット</button>
       </div>
     </main>
 

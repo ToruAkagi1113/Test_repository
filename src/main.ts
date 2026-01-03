@@ -11,6 +11,7 @@ const answerInput = getRequiredElement<HTMLInputElement>('answer-input');
 const feedback = getRequiredElement<HTMLDivElement>('feedback');
 const checkButton = getRequiredElement<HTMLButtonElement>('check-answer');
 const nextButton = getRequiredElement<HTMLButtonElement>('next-question');
+const resetStatsButton = getRequiredElement<HTMLButtonElement>('reset-stats');
 const correctCountLabel = getRequiredElement<HTMLSpanElement>('correct-count');
 const attemptCountLabel = getRequiredElement<HTMLSpanElement>('attempt-count');
 const accuracyLabel = getRequiredElement<HTMLSpanElement>('accuracy');
@@ -76,6 +77,16 @@ function setFeedback(message: string, status: 'info' | 'success' | 'error'): voi
   feedback.dataset.status = status;
 }
 
+function resetStats(): void {
+  correctCount = 0;
+  attemptCount = 0;
+  streak = 0;
+  bestStreak = 0;
+  updateStats();
+  setFeedback('成績をリセットしました。新しい問題に挑戦しましょう。', 'info');
+  resetForNextQuestion({ preserveFeedback: true });
+}
+
 function resetForNextQuestion(options?: { preserveFeedback?: boolean }): void {
   const { preserveFeedback = false } = options ?? {};
 
@@ -130,6 +141,10 @@ checkButton.addEventListener('click', () => {
 
 nextButton.addEventListener('click', () => {
   resetForNextQuestion();
+});
+
+resetStatsButton.addEventListener('click', () => {
+  resetStats();
 });
 
 answerInput.addEventListener('keyup', (event: KeyboardEvent) => {
