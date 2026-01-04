@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>九九トレーナー</title>
+    <style>
+      :root {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: #1e293b;
+        background-color: #f8fafc;
+      }
+
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .app {
+        width: min(640px, 90vw);
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      }
+
+      h1 {
+        margin-top: 0;
+        color: #0f172a;
+        font-size: 28px;
+      }
+
+      .question-card {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f1f5f9;
+      }
+
+      .countdown {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #e0f2fe;
+        color: #0b5394;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border: 1px solid #bfdbfe;
+      }
+
+      .countdown[data-state='warn'] {
+        background: #fff4e5;
+        color: #b45309;
+        border-color: #fcd34d;
+      }
+
+      .question-text {
+        font-size: 32px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px;
+        color: #1d4ed8;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .input-wrapper {
+        display: flex;
+        gap: 8px;
+      }
+
+      input[type='number'] {
+        flex: 1;
+        font-size: 18px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+      }
+
+      input[type='number']:focus {
+        outline: 2px solid #60a5fa;
+        border-color: #2563eb;
+      }
+
+      button {
+        padding: 12px 18px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #fff;
+        transition: transform 0.05s ease, box-shadow 0.1s ease;
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      .primary {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+      }
+
+      .secondary {
+        background: #0ea5e9;
+        box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+      }
+
+      .feedback {
+        margin-top: 10px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+
+      .feedback[data-status='success'] {
+        background: #ecfeff;
+        color: #0f172a;
+        border: 1px solid #22d3ee;
+      }
+
+      .feedback[data-status='error'] {
+        background: #fff1f2;
+        color: #9f1239;
+        border: 1px solid #fda4af;
+      }
+
+      .stats {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e2e8f0;
+        color: #0f172a;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+
+      .badge .label {
+        font-size: 14px;
+        color: #475569;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .actions {
+        margin-top: 16px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .reset-button {
+        background: #f59e0b;
+        color: #fff;
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+      }
+
+      .celebration-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .confetti {
+        position: absolute;
+        top: -16px;
+        width: 10px;
+        height: 18px;
+        border-radius: 2px;
+        animation: fall 1.2s ease-out forwards;
+        opacity: 0.9;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0.9;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(420deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app" aria-labelledby="title">
+      <h1 id="title">九九トレーナー</h1>
+      <p>ランダムに出題される九九の問題に答えて、計算の練習をしましょう。</p>
+
+      <section class="question-card" aria-live="polite">
+        <div class="question-text" id="question-text">-</div>
+        <div class="countdown" id="countdown" aria-live="polite">残り 10 秒</div>
+        <div class="controls">
+          <div class="input-wrapper">
+            <label for="answer-input" class="visually-hidden">答え</label>
+            <input
+              id="answer-input"
+              type="number"
+              inputmode="numeric"
+              placeholder="答えを入力"
+              autocomplete="off"
+            />
+            <button class="primary" id="check-answer" type="button">答え合わせ</button>
+          </div>
+          <button class="secondary" id="next-question" type="button">次の問題</button>
+        </div>
+        <div class="feedback" id="feedback" role="status" data-status="info">
+          解答を入力して答え合わせをしましょう。
+        </div>
+      </section>
+
+      <div class="stats" aria-label="成績">
+        <span class="badge">
+          <span class="label">正解</span>
+          <span id="correct-count">0</span>
+        </span>
+        <span class="badge">
+          <span class="label">回答数</span>
+          <span id="attempt-count">0</span>
+        </span>
+        <span class="badge">
+          <span class="label">正答率</span>
+          <span id="accuracy">-</span>
+        </span>
+        <span class="badge">
+          <span class="label">連続正解</span>
+          <span id="streak">0問連続</span>
+        </span>
+        <span class="badge">
+          <span class="label">ベスト</span>
+          <span id="best-streak">0問</span>
+        </span>
+      </div>
+
+      <div class="actions">
+        <button class="reset-button" id="reset-stats" type="button">成績をリセット</button>
+      </div>
+    </main>
+
+    <div class="celebration-layer" id="celebration-layer" aria-hidden="true"></div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
