@@ -43,6 +43,26 @@
         background: #f1f5f9;
       }
 
+      .countdown {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #e0f2fe;
+        color: #0b5394;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border: 1px solid #bfdbfe;
+      }
+
+      .countdown[data-state='warn'] {
+        background: #fff4e5;
+        color: #b45309;
+        border-color: #fcd34d;
+      }
+
       .question-text {
         font-size: 32px;
         font-weight: 700;
@@ -168,6 +188,37 @@
         color: #fff;
         box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
       }
+
+      .celebration-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .confetti {
+        position: absolute;
+        top: -16px;
+        width: 10px;
+        height: 18px;
+        border-radius: 2px;
+        animation: fall 1.2s ease-out forwards;
+        opacity: 0.9;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 0.9;
+        }
+        70% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(420deg);
+          opacity: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -177,6 +228,7 @@
 
       <section class="question-card" aria-live="polite">
         <div class="question-text" id="question-text">-</div>
+        <div class="countdown" id="countdown" aria-live="polite">残り 10 秒</div>
         <div class="controls">
           <div class="input-wrapper">
             <label for="answer-input" class="visually-hidden">答え</label>
@@ -223,6 +275,8 @@
         <button class="reset-button" id="reset-stats" type="button">成績をリセット</button>
       </div>
     </main>
+
+    <div class="celebration-layer" id="celebration-layer" aria-hidden="true"></div>
 
     <script type="module" src="./src/main.js"></script>
   </body>
